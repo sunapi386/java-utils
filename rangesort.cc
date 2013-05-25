@@ -1,6 +1,6 @@
 #include <iostream>
 #include <map>
-#define DEBUG 1
+#define DEBUG 0
 using namespace std;
 
 void map_add (map<int,int>* mymap, int key, int val) {
@@ -9,6 +9,7 @@ void map_add (map<int,int>* mymap, int key, int val) {
 }
 
 void map_update (map<int,int>* mymap, int old_key, int new_key, int val) {
+    // map is read-only, so need to delete and re-add
     mymap->erase ( mymap->find(old_key), mymap->upper_bound(val) );    // erasing by range [x,y)
     mymap->insert(pair<int,int>(new_key,val));
     if (DEBUG) cout << "updated " << old_key << ", " << val << " to " << new_key << ", " << val;
@@ -29,7 +30,7 @@ void read_and_build(map<int,int> &mymap) {
         }
         map<int,int>::iterator it = mymap.lower_bound(A);
 
-        // Special case: initial
+        // Special case 0: initialization.
         if (mymap.size() == 0) {
             if(DEBUG)  cout << "\t\t\t\tcase 0 ";
             map_add (&mymap, A, B);
@@ -39,7 +40,9 @@ void read_and_build(map<int,int> &mymap) {
         int a, b;
         a = it->first;
         b = it->second;
+        
         if(DEBUG)  cout << "\ta,b=[" << a << "," << b << "] A,B=[" << A << "," << B << "]\t";
+
         /* 
         Variables A, B is the current range we are trying to add to list.
         Variables a, b is already in list. It is the closest range to A, B.
@@ -62,12 +65,12 @@ void read_and_build(map<int,int> &mymap) {
             if(DEBUG)  cout << "case 2 ";
             continue;
         }
-        if (a >= A && b >= B && a <= B) {   // map is read-only, so need to delete and re-add
+        if (a >= A && b >= B && a <= B) { 
             if(DEBUG)  cout << "case 3 ";
             map_update (&mymap, a, A, b);
             continue;
         }
-        if (a >= A && b <= B) {           // map is read-only, so need to delete and re-add
+        if (a >= A && b <= B) {           
             if(DEBUG)  cout << "case 4 ";
             map_update (&mymap, a, A, B);
             continue;
@@ -94,6 +97,7 @@ void map_print (map<int,int>& m) {
         cout << it->first << " --- " << it->second << '\n';
 }
 
+// The search function
 bool map_is_in_range (map<int,int>& mymap, int x) {
     map<int,int>::iterator it = mymap.upper_bound(x);
     --it;
@@ -101,20 +105,20 @@ bool map_is_in_range (map<int,int>& mymap, int x) {
     return (x >= it->first && x <= it->second);
 }
 
+
 int main () {
+    // Create a map
     map<int,int> mymap;
     read_and_build(mymap);
+
     map_print (mymap);
 
+    // Read some numbers, see if they are in a range
     while (true) {
         int x = 0;
         cin >> x;
-        cout << map_is_in_range(mymap, x) << endl;
-        if (x == 12345) break;
+        cout << "\t: " << map_is_in_range(mymap, x) << endl;
     }
-    
 
-
-    return 0;
 }
 
