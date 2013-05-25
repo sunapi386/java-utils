@@ -1,12 +1,40 @@
+/*
+May 24, 2013
+Jason Sun
+
+Give a list of ranges, we uniquely insert them to a map, 
+the <key> being the lower bound and <value> being upper, inclusively.
+
+Insertion of a list of ranges takes O( nlog(n) ), 
+n insertions each O( log(n) ), as per STL implementation.
+
+Find is also O( log(n) ), as C++'s STL implementation.
+
+This was done for integers only, but we can use any type we want in a map, like floats.
+I piggybacked off map implementation. It makes sense to use things already built.
+
+The general idea is to:
+1) Sort by lower range, collapse and fold overlapping ranges
+2) Binary search on list of ranges (now taken care of by C++ map)
+
+To try it out, see testing.in for documentation.
+My tests are in ranges.in
+
+*/
+
 #include <iostream>
 #include <map>
 #define DEBUG 0
 using namespace std;
 
+
+
 void map_add (map<int,int>* mymap, int key, int val) {
     mymap->insert(pair<int,int>(key,val));
     if (DEBUG) cout << "add " << key << ", " << val;
 }
+
+
 
 void map_update (map<int,int>* mymap, int old_key, int new_key, int val) {
     // map is read-only, so need to delete and re-add
@@ -14,6 +42,8 @@ void map_update (map<int,int>* mymap, int old_key, int new_key, int val) {
     mymap->insert(pair<int,int>(new_key,val));
     if (DEBUG) cout << "updated " << old_key << ", " << val << " to " << new_key << ", " << val;
 }
+
+
 
 
 void read_and_build(map<int,int> &mymap) {
@@ -90,12 +120,14 @@ void read_and_build(map<int,int> &mymap) {
 
 }
 
+
 // Print content
 void map_print (map<int,int>& m) {
     cout << "\nPRINTED MAP:" << endl;
     for (map<int,int>::iterator it=m.begin(); it!=m.end(); ++it)
         cout << it->first << " --- " << it->second << '\n';
 }
+
 
 // The search function
 bool map_is_in_range (map<int,int>& mymap, int x) {
@@ -106,7 +138,13 @@ bool map_is_in_range (map<int,int>& mymap, int x) {
 }
 
 
+
+
+
+
+
 int main () {
+
     // Create a map
     map<int,int> mymap;
     read_and_build(mymap);
@@ -118,7 +156,9 @@ int main () {
         int x = 0;
         cin >> x;
         cout << "\t: " << map_is_in_range(mymap, x) << endl;
+        if (x == 1337) break;
     }
 
+    return 0;
 }
 
