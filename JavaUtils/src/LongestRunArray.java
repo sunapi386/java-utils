@@ -22,22 +22,17 @@ public class LongestRunArray {
         for (int i = 0; i < n; i++) {
             A[i] = s.nextInt();
         }
-        if (DEBUG) {
-            System.out.print("Read " + n + " elements: ");
-            for (int i = 0; i < A.length; i++) {
-                System.out.print(" " + A[i]);
-            }
-        }
         return A;
     }
 
     // Debugging: prints an array content
     public static final void array_print(int[] A) {
         assert (A.length > 0);
-        System.out.print("\nARRAY:");
+        System.out.print("ARRAY:");
         for (int i = 0; i < A.length; i++) {
             System.out.print(" " + A[i]);
         }
+        System.out.println();
     }
 
     // Split array A into a smaller array from index low to high
@@ -90,7 +85,7 @@ public class LongestRunArray {
         assert (index_right < A_right.length);
         // Combine left and right and return it
         int[] A_middle = new int[A_left.length - index_left + index_right];
-        A_middle = array_merge(array_split(A_left, index_left, A_left.length), array_split(A_right, 0, index_right));
+        A_middle = array_merge(array_split(A_left, index_left, A_left.length), array_split(A_right, 0, index_right + 1));
         return A_middle;
     }
 
@@ -110,31 +105,41 @@ public class LongestRunArray {
         int[] result_right = runner(A_right);
         int[] result_middle = runner_merge(result_left, result_right);
         if (DEBUG) {
+            System.out.println("+++");
+            System.out.print("L_");
             array_print(result_left);
+            System.out.print("M_");
             array_print(result_middle);
+            System.out.print("R_");
             array_print(result_right);
+
         }
 
+        // COMBINING PART...
         // PROBABLY WRONG
         int len_l = result_left.length;
         int len_r = result_right.length;
         int len_m = result_middle.length;
-        if (len_m > len_l && len_m > len_r) {
-            return result_middle;
-        } else {
-            return given_A;
+        int[] result_result;
+        if (len_m >= len_l && len_m >= len_r) {
+            result_result = result_middle;
+        } else  {
+            // if (len_m == 0) well we can return either one of them... left or right.. maybe return both?
+            result_result = array_merge(result_left, result_right);
         }
-
-
-
+        System.out.print("Returning ");
+        array_print(result_result);
+        System.out.println("---");
+        return result_result;
     }
 
     // Main program
     public static final void main(String[] args) {
         int[] A = build_array();
+        array_print(A);
         int[] longest_runner_array = runner(A);
 
-        System.out.println("\nRESULT: " + longest_runner_array.length + " " + longest_runner_array[0]);
+        System.out.print("\nRESULT: " + longest_runner_array.length + " " + longest_runner_array[0] + " ");
         array_print(longest_runner_array);
     }
 }
