@@ -16,7 +16,7 @@ The program must:
 Bonus points for a solution that pays attention to the presentation
 of the data (line chart layout, re-scaling, axis, etc.).
 
-We have provided a very simple starting program "LatencyChallenge.java"
+We have provided a very simple starting program "LatencyTool.java"
 which displays axes for plots of latency to yahoo.com and google.com,
 but does not perform any measurement. It can be compiled an run using:
 
