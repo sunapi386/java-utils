@@ -161,10 +161,10 @@ public class LongestRunArray {
         int[] longest_runner_array = runner(A);
         if (DEBUG) {
             array_print(A);
-            System.out.println("\nLongest Array: " );
+            System.out.println("\nLongest Array: ");
             array_print(longest_runner_array);
         }
-        System.out.print(longest_runner_array.length + " " + longest_runner_array[0]);
+        System.out.println(longest_runner_array.length + " " + longest_runner_array[0]);
 
     }
 }
