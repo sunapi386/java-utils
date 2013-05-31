@@ -1,0 +1,30 @@
+Latency Measurement Tool
+==========================================
+To periodically measure the latency of
+accessing multiple hostnames and chart them visually.
+
+The program must:
+
+  1. Continuously and in parallel establish connections on port 80
+     to two hostnames: google.com and yahoo.com.
+
+  2. Display the latency over time of each hostname on the same
+     line graph.
+
+  3. Not block the UI when establishing connections.
+
+Bonus points for a solution that pays attention to the presentation
+of the data (line chart layout, re-scaling, axis, etc.).
+
+We have provided a very simple starting program "LatencyChallenge.java"
+which displays axes for plots of latency to yahoo.com and google.com,
+but does not perform any measurement. It can be compiled an run using:
+
+    javac *.java
+    java LatencyChallenge
+
+You should extend and change the code as needed to complete your program.
+
+We're using the Swing library to create a window, but extensive knowledge
+of Swing particulars is not required. Any UI using only 2D drawing
+routines is sufficient.

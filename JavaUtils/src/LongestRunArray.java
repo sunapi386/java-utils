@@ -11,7 +11,7 @@ import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
  * Time: 7:27 PM
  */
 public class LongestRunArray {
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     // Read m then m numbers from standard input, returning array A of size m
     public static final int[] build_array() {
@@ -60,7 +60,7 @@ public class LongestRunArray {
 
     // Find longest run that contains elements from both A_left and A_right
     // Note: there may not exist any runs with this property
-    public static final int[] runner_merge(int[] A_left, int[] A_right) {
+    public static final int[] runner_middle(int[] A_left, int[] A_right) {
         // Done in O(n) by scanning to the left from end of A_left
         // and scanning to the right from beginning of A_right
         assert (A_left.length >= 1 && A_right.length >= 1);
@@ -89,13 +89,46 @@ public class LongestRunArray {
         return A_middle;
     }
 
+    // Merge: takes left, middle, and right arrays
+    // Preference always given to middle, and in the case middle is empty,
+    // the array with last element smallest is returned.
+    public static final int[] runner_merge(int[] result_left, int[] result_middle, int[] result_right) {
+        int[] return_result;
+        int len_l = result_left.length;
+        int len_r = result_right.length;
+        int len_m = result_middle.length;
+        int[] result_result;
+        if (len_m >= len_l && len_m >= len_r) {
+            result_result = result_middle;
+        } else if (len_l > len_r) {
+            result_result = result_left;
+        } else if (len_l < len_r) {
+            result_result = result_right;
+        } else {
+            // In the case of "ties", it will not mater which one you return.
+            // This is because of the way the merge step works.
+            // - Dr. Stinson
+
+            result_result = result_right;
+        }
+
+        if (DEBUG) {
+            System.out.print("Returning ");
+            array_print(result_result);
+            System.out.println("---");
+        }
+
+        return result_result;
+    }
+
     // Divide and Conquer Algorithm
     public static final int[] runner(int[] given_A) {
         // Return atomic arrays
         if (given_A.length == 1) return given_A;
 
-        // Otherwise divide
+        // Otherwise divide work
         int half = (int) (given_A.length / 2);
+
         // Make left and right sub-arrays
         int[] A_left = array_split(given_A, 0, half);
         int[] A_right = array_split(given_A, half, given_A.length);
@@ -103,7 +136,10 @@ public class LongestRunArray {
         // Recurse left and right array
         int[] result_left = runner(A_left);
         int[] result_right = runner(A_right);
-        int[] result_middle = runner_merge(result_left, result_right);
+
+        // Check if middle has result
+        int[] result_middle = runner_middle(result_left, result_right);
+
         if (DEBUG) {
             System.out.println("+++");
             System.out.print("L_");
@@ -112,34 +148,23 @@ public class LongestRunArray {
             array_print(result_middle);
             System.out.print("R_");
             array_print(result_right);
-
         }
 
-        // COMBINING PART...
-        // PROBABLY WRONG
-        int len_l = result_left.length;
-        int len_r = result_right.length;
-        int len_m = result_middle.length;
-        int[] result_result;
-        if (len_m >= len_l && len_m >= len_r) {
-            result_result = result_middle;
-        } else  {
-            // if (len_m == 0) well we can return either one of them... left or right.. maybe return both?
-            result_result = array_merge(result_left, result_right);
-        }
-        System.out.print("Returning ");
-        array_print(result_result);
-        System.out.println("---");
-        return result_result;
+        // Merge who to return, left|middle|right arrays
+        int[] longest_runner = runner_merge(result_left, result_middle, result_right);
+        return longest_runner;
     }
 
     // Main program
     public static final void main(String[] args) {
         int[] A = build_array();
-        array_print(A);
         int[] longest_runner_array = runner(A);
+        if (DEBUG) {
+            array_print(A);
+            System.out.println("\nLongest Array: " );
+            array_print(longest_runner_array);
+        }
+        System.out.print(longest_runner_array.length + " " + longest_runner_array[0]);
 
-        System.out.print("\nRESULT: " + longest_runner_array.length + " " + longest_runner_array[0] + " ");
-        array_print(longest_runner_array);
     }
 }
