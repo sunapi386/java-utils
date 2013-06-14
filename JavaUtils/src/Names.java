@@ -23,7 +23,7 @@ class Names {
         }
     }
 
-    static class Name implements Comparable<Name> /* Comparable provides an order for Name */ {
+    static class Name implements Comparable<Name> /* Comparable provides an order for Schedule */ {
 
         public String first;
         public String last;
